@@ -140,6 +140,12 @@
             transform: translateY(0);
         }
 
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .hidden { 
             display: none !important; 
         }
@@ -260,6 +266,11 @@
             color: #065f46;
         }
 
+        #lineStatus.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
         textarea.form-control {
             resize: vertical;
             min-height: 80px;
@@ -360,6 +371,7 @@
         <div class="summary-box">
             <p><strong>👤 ชื่อ:</strong> <span id="view-name"></span></p>
             <p><strong>📞 เบอร์:</strong> <span id="view-phone"></span></p> 
+            <p><strong>🎯 กิจกรรม:</strong> <span id="view-activity"></span></p>
             <p><strong>📍 รายการ:</strong> <span id="view-sub"></span></p>
         </div>
         <button type="button" onclick="backToForm()" class="btn-add-new">
@@ -369,10 +381,6 @@
 </div>
 
 <script>
-    // กำหนดค่าคงที่
-    const SHEET_ID = "1jKi_sR3PL5U3vNjX1nvbqRVGNT7Ege1SLMMa7Wz8i-w";
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyAOwcPdPUeNpQz6jQyQPQ3c_nd6x1I0nJ5NNuYfFo6c5Ke1wRG05aqp1BCtrhFy4obSA/exec";
-
     const subData = {
         'ธรรมยาตรา': ['3 ม.ค. โลตัสแลนด์', '7 ม.ค. คลองบางนางแท่น', '11 ม.ค. วัดสองพี่น้อง', '14 ม.ค. วัดโบสถ์บน','18 ม.ค. บางปลา'],
         'จุดประทีป': ['B1', 'B2', 'B3'],
@@ -395,8 +403,11 @@
             statusEl.classList.add('connected');
 
         } catch (err) {
-            statusEl.innerText = '⚠ ไม่สามารถเชื่อมต่อ LINE';
-            console.error(err);
+            statusEl.innerText = '⚠ ไม่สามารถเชื่อมต่อ LINE (จะใช้โหมดทดสอบ)';
+            statusEl.classList.add('error');
+            console.error('LIFF Error:', err);
+            // ตั้งค่า default สำหรับการทดสอบ
+            document.getElementById('lineUserId').value = 'TEST_USER';
         }
     }
 
@@ -411,55 +422,56 @@
         }
     }
 
-    async function handleForm(form) {
-        // แสดงข้อมูลที่กรอก
-        document.getElementById('view-name').innerText = form.name.value;
-        document.getElementById('view-phone').innerText = form.phone.value;
-        document.getElementById('view-sub').innerText = form.sub_option.value;
+    function handleForm(form) {
+        // เก็บข้อมูลสำหรับแสดงผล
+        const formData = {
+            name: form.name.value,
+            phone: form.phone.value,
+            option: form.option.value,
+            sub_option: form.sub_option.value,
+            details: form.details.value || '',
+            lineUserId: form.lineUserId.value
+        };
+
+        // แสดงข้อมูลในหน้าสรุป
+        document.getElementById('view-name').innerText = formData.name;
+        document.getElementById('view-phone').innerText = formData.phone;
+        document.getElementById('view-activity').innerText = formData.option;
+        document.getElementById('view-sub').innerText = formData.sub_option;
 
         // แสดงหน้า Loading
         document.getElementById('section-form').classList.add('hidden');
         document.getElementById('section-loading').classList.remove('hidden');
 
-        try {
-            // เตรียมข้อมูลสำหรับส่ง
-            const formData = new FormData();
-            formData.append('name', form.name.value);
-            formData.append('phone', form.phone.value);
-            formData.append('option', form.option.value);
-            formData.append('sub_option', form.sub_option.value);
-            formData.append('details', form.details.value || '');
-            formData.append('lineUserId', form.lineUserId.value);
+        // ปิดปุ่ม submit
+        document.getElementById('submitBtn').disabled = true;
 
-            // ส่งข้อมูลไปยัง Google Apps Script
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await response.json();
-
-            if (result.status === 'success') {
+        // ส่งข้อมูลไปยัง Google Apps Script
+        google.script.run
+            .withSuccessHandler(function(response) {
+                console.log('Success:', response);
                 // แสดงหน้า Success
                 document.getElementById('section-loading').classList.add('hidden');
                 document.getElementById('section-success').classList.remove('hidden');
-            } else {
-                throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
-            }
-
-        } catch (error) {
-            console.error('Error:', error);
-            alert("เกิดข้อผิดพลาด: " + error.message);
-            document.getElementById('section-loading').classList.add('hidden');
-            document.getElementById('section-form').classList.remove('hidden');
-        }
+            })
+            .withFailureHandler(function(error) {
+                console.error('Error:', error);
+                alert("เกิดข้อผิดพลาด: " + error.message);
+                // กลับไปหน้าฟอร์ม
+                document.getElementById('section-loading').classList.add('hidden');
+                document.getElementById('section-form').classList.remove('hidden');
+                document.getElementById('submitBtn').disabled = false;
+            })
+            .processForm(formData);
     }
 
     function backToForm() {
         document.getElementById('mainForm').reset();
         document.getElementById('sub-opt').disabled = true;
+        document.getElementById('sub-opt').innerHTML = '<option value="">กรุณาเลือกกิจกรรมก่อน</option>';
         document.getElementById('section-success').classList.add('hidden');
         document.getElementById('section-form').classList.remove('hidden');
+        document.getElementById('submitBtn').disabled = false;
     }
 </script>
 </body>
