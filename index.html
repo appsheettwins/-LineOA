@@ -1,562 +1,331 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-    <base target="_top">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <title>แบบฟอร์มลงทะเบียน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: 'Kanit', sans-serif;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-main { 
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 35px;
-            border-radius: 25px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 480px;
-            width: 100%;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header-section h4 {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-        }
-
-        .header-section p {
-            color: #6b7280;
-            font-size: 14px;
-            font-weight: 300;
-        }
-
-        .form-label { 
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .form-control, .form-select {
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-            outline: none;
-        }
-
-        .form-control:hover, .form-select:hover {
-            border-color: #cbd5e1;
-        }
-
-        .mb-3 {
-            margin-bottom: 20px;
-            animation: fadeIn 0.5s ease-out backwards;
-        }
-
-        .mb-3:nth-child(2) { animation-delay: 0.1s; }
-        .mb-3:nth-child(3) { animation-delay: 0.2s; }
-        .mb-3:nth-child(4) { animation-delay: 0.3s; }
-        .mb-3:nth-child(5) { animation-delay: 0.4s; }
-        .mb-3:nth-child(6) { animation-delay: 0.5s; }
-
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 600;
-            font-size: 16px;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-            cursor: pointer;
-            margin-top: 10px;
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-in-out;
         }
-
-        .btn-submit:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .hidden { 
-            display: none !important; 
-        }
-
-        .summary-box { 
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            border-left: 6px solid #10b981;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-        }
-
-        .summary-box p {
-            margin-bottom: 12px;
-            font-size: 15px;
-            color: #065f46;
-        }
-
-        .summary-box p:last-child {
-            margin-bottom: 0;
-        }
-
-        .summary-box strong {
-            font-weight: 600;
-        }
-
-        .btn-add-new { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 600;
-            font-size: 16px;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-            cursor: pointer;
-        }
-
-        .btn-add-new:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.5);
-        }
-
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #10b981;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            animation: bounceIn 0.6s ease-out;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-        }
-
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .success-icon span {
-            font-size: 40px;
-            color: white;
-        }
-
-        .success-title {
-            color: #065f46;
-            font-weight: 700;
-            font-size: 26px;
-            margin-bottom: 25px;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid #e5e7eb;
-            border-top: 5px solid #667eea;
-            border-radius: 50%;
+            width: 24px;
+            height: 24px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .loading-text {
-            color: #6b7280;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        #lineStatus {
-            font-size: 13px;
-            color: #6b7280;
-            padding: 8px 12px;
-            background: #f3f4f6;
-            border-radius: 8px;
-            margin-top: 12px;
-            display: inline-block;
-        }
-
-        #lineStatus.connected {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        #lineStatus.error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        select.form-select:disabled {
-            background-color: #f9fafb;
-            cursor: not-allowed;
-        }
-
-        .line-notify-badge {
-            background: #06c755;
-            color: white;
-            font-size: 12px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 8px;
-        }
-
-        .debug-info {
-            background: #f3f4f6;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #4b5563;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        @media (max-width: 576px) {
-            body {
-                padding: 10px;
-            }
-            
-            .card-main {
-                padding: 25px 20px;
-            }
-            
-            .header-section h4 {
-                font-size: 24px;
-            }
-        }
     </style>
 </head>
-<body>
-
-<div class="card-main">
-    <div id="section-form">
-        <div class="header-section">
-            <h4>📝 บันทึกข้อมูล</h4>
-            <p>กรุณากรอกข้อมูลให้ครบถ้วน</p>
-        </div>
-
-        <form id="mainForm" onsubmit="event.preventDefault(); handleForm(this);">
-            
-            <input type="hidden" name="lineUserId" id="lineUserId" value="N/A">
-
-            <div class="mb-3">
-                <label class="form-label">
-                    <span>👤</span> ชื่อ-นามสกุล
-                </label>
-                <input type="text" name="name" class="form-control" placeholder="ระบุชื่อของคุณ" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">
-                    <span>📞</span> เบอร์โทรศัพท์
-                </label>
-                <input type="tel" name="phone" class="form-control" placeholder="08x-xxxxxxx" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">
-                    <span>🎯</span> กิจกรรม
-                </label>
-                <select name="option" id="main-opt" class="form-select" onchange="updateSub(this.value)" required>
-                    <option value="" disabled selected>เลือกกิจกรรม...</option>
-                    <option value="ธรรมยาตรา">ธรรมยาตรา</option>
-                    <option value="จุดประทีป">จุดประทีป</option>
-                    <option value="ตักบาตร">ตักบาตร</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">
-                    <span>📍</span> รายการย่อย
-                </label>
-                <select name="sub_option" id="sub-opt" class="form-select" required disabled>
-                    <option value="">กรุณาเลือกกิจกรรมก่อน</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">
-                    <span>📝</span> รายละเอียดเพิ่มเติม
-                </label>
-                <textarea name="details" class="form-control" placeholder="ระบุรายละเอียดเพิ่มเติม (ถ้ามี)"></textarea>
-            </div>
-            
-            <button type="submit" id="submitBtn" class="btn-submit">
-                💾 บันทึกข้อมูล
-            </button>
-            
-            <div class="text-center">
-                <div id="lineStatus">กำลังเชื่อมต่อ LINE...</div>
-                <div id="lineNotifyBadge" class="line-notify-badge hidden">
-                    ✉️ จะส่งการแจ้งเตือนไปยัง LINE
+<body class="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 min-h-screen">
+    <div class="container max-w-md mx-auto p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 mt-8">
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
                 </div>
-                <div id="debugInfo" class="debug-info hidden"></div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">แบบฟอร์มลงทะเบียน</h1>
+                <p class="text-gray-600 text-sm">กรอกข้อมูลเพื่อลงทะเบียนเข้าร่วมกิจกรรม</p>
             </div>
-        </form>
-    </div>
 
-    <div id="section-loading" class="hidden text-center py-5">
-        <div class="loading-spinner"></div>
-        <p class="loading-text">กำลังบันทึกข้อมูล...</p>
-        <p class="loading-text" style="font-size: 13px; margin-top: 10px;">📨 กำลังส่งแจ้งเตือนไปยัง LINE</p>
-    </div>
-
-    <div id="section-success" class="hidden">
-        <div class="text-center">
-            <div class="success-icon">
-                <span>✓</span>
+            <!-- Loading State -->
+            <div id="loadingState" class="flex justify-center items-center py-8">
+                <div class="spinner"></div>
+                <span class="ml-2 text-gray-600">กำลังโหลดข้อมูล...</span>
             </div>
-            <h3 class="success-title">บันทึกสำเร็จ!</h3>
-            <p style="color: #6b7280; font-size: 14px; margin-bottom: 25px;">
-                📨 ส่งการแจ้งเตือนไปยัง LINE ของคุณแล้ว
-            </p>
+
+            <!-- Form -->
+            <div id="formContainer" style="display: none;">
+                <div class="space-y-4">
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            ชื่อ-นามสกุล <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
+                            placeholder="กรอกชื่อ-นามสกุล"
+                        />
+                    </div>
+
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            เบอร์โทรศัพท์ <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
+                            placeholder="0XX-XXX-XXXX"
+                        />
+                    </div>
+
+                    <!-- Activity -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            เลือกกิจกรรม <span class="text-red-500">*</span>
+                        </label>
+                        <select 
+                            id="activity" 
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition bg-white"
+                        >
+                            <option value="">-- เลือกกิจกรรม --</option>
+                        </select>
+                    </div>
+
+                    <!-- User ID Display -->
+                    <div id="userIdDisplay" class="bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-lg border border-blue-200" style="display: none;">
+                        <p class="text-xs text-gray-600">
+                            Session ID: <span id="userId" class="font-mono text-gray-800"></span>
+                        </p>
+                        <p id="lineAppIndicator" class="text-xs text-green-600 mt-1" style="display: none;">✓ เปิดจาก LINE App</p>
+                    </div>
+
+                    <!-- Status Message -->
+                    <div id="statusMessage" class="hidden"></div>
+
+                    <!-- Submit Button -->
+                    <button 
+                        id="submitBtn"
+                        class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-medium py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                        ส่งข้อมูลลงทะเบียน
+                    </button>
+                </div>
+            </div>
+
+            <!-- Note -->
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    หมายเหตุ
+                </h3>
+                <ul class="text-xs text-gray-600 space-y-1">
+                    <li>• ข้อมูลจะถูกบันทึกลง Google Sheets</li>
+                    <li>• หากเปิดจาก LINE จะได้รับข้อความยืนยันทาง LINE</li>
+                    <li>• กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนส่ง</li>
+                </ul>
+            </div>
         </div>
-        <div class="summary-box">
-            <p><strong>👤 ชื่อ:</strong> <span id="view-name"></span></p>
-            <p><strong>📞 เบอร์:</strong> <span id="view-phone"></span></p> 
-            <p><strong>🎯 กิจกรรม:</strong> <span id="view-activity"></span></p>
-            <p><strong>📍 รายการ:</strong> <span id="view-sub"></span></p>
-        </div>
-        <button type="button" onclick="backToForm()" class="btn-add-new">
-            ➕ เพิ่มข้อมูลใหม่
-        </button>
     </div>
-</div>
 
-<script>
-    const subData = {
-        'ธรรมยาตรา': ['3 ม.ค. โลตัสแลนด์', '7 ม.ค. คลองบางนางแท่น', '11 ม.ค. วัดสองพี่น้อง', '14 ม.ค. วัดโบสถ์บน','18 ม.ค. บางปลา'],
-        'จุดประทีป': ['B1', 'B2', 'B3'],
-        'ตักบาตร': ['C1', 'C2', 'C3', 'C4', 'C5']
-    };
+    <script>
+        // Configuration
+        const CONFIG = {
+            LIFF_ID: '2008930174-Z1xFjI1X',
+            SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxGlCu4Yez2m8fuih5PrAEemnSdkH4WH1DQorCJ2RCQBMy0S-TWp9jUAGWl79qKCMhB/exec'
+        };
 
-    let liffInitialized = false;
-    let userProfile = null;
+        let lineUserId = '';
+        let isLineApp = false;
 
-    function addDebugLog(message) {
-        const debugEl = document.getElementById('debugInfo');
-        debugEl.classList.remove('hidden');
-        const timestamp = new Date().toLocaleTimeString('th-TH');
-        debugEl.innerHTML += `[${timestamp}] ${message}<br>`;
-        debugEl.scrollTop = debugEl.scrollHeight;
-        console.log(message);
-    }
-
-    async function initLiff() {
-        const statusEl = document.getElementById('lineStatus');
-        const notifyBadge = document.getElementById('lineNotifyBadge');
-        
-        try {
-            addDebugLog('🔄 เริ่มต้น LIFF...');
-            
-            // ตรวจสอบว่า LIFF SDK โหลดแล้วหรือยัง
-            if (typeof liff === 'undefined') {
-                throw new Error('LIFF SDK ไม่ถูกโหลด');
+        // Initialize
+        async function initialize() {
+            try {
+                await initializeLiff();
+                await loadActivities();
+                showForm();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showError('เกิดข้อผิดพลาดในการโหลดข้อมูล');
             }
-            
-            addDebugLog('📱 กำลังเชื่อมต่อ LIFF ID: 2008930174-6m3cosbU');
-            
-            await liff.init({ 
-                liffId: "2008933743-UuRrgT1t"
-            });
-            
-            addDebugLog('✅ LIFF เริ่มต้นสำเร็จ');
-            addDebugLog('🔍 ตรวจสอบสถานะการล็อกอิน...');
+        }
 
-            if (!liff.isLoggedIn()) {
-                addDebugLog('⚠️ ยังไม่ได้ล็อกอิน - กำลังเปลี่ยนเส้นทางไปหน้าล็อกอิน LINE');
-                statusEl.innerText = '🔐 กำลังเปลี่ยนเส้นทางไปหน้าล็อกอิน...';
-                liff.login();
+        // Initialize LIFF
+        async function initializeLiff() {
+            const ua = navigator.userAgent.toLowerCase();
+            isLineApp = ua.indexOf('line') !== -1;
+
+            if (typeof liff !== 'undefined') {
+                try {
+                    await liff.init({ liffId: CONFIG.LIFF_ID });
+                    
+                    if (liff.isLoggedIn()) {
+                        const profile = await liff.getProfile();
+                        lineUserId = profile.userId;
+                        document.getElementById('lineAppIndicator').style.display = 'block';
+                    } else {
+                        liff.login();
+                    }
+                } catch (error) {
+                    console.error('LIFF init error:', error);
+                    lineUserId = 'demo_' + Date.now();
+                }
+            } else {
+                lineUserId = 'web_' + Date.now();
+            }
+
+            // Display User ID
+            if (lineUserId) {
+                document.getElementById('userId').textContent = lineUserId.substring(0, 15) + '...';
+                document.getElementById('userIdDisplay').style.display = 'block';
+            }
+        }
+
+        // Load Activities
+        async function loadActivities() {
+            try {
+                const response = await fetch(CONFIG.SCRIPT_URL + '?action=getActivities');
+                const data = await response.json();
+                
+                const select = document.getElementById('activity');
+                const activities = data.activities && data.activities.length > 0 
+                    ? data.activities 
+                    : ['สัมมนาออนไลน์', 'Workshop การตลาดดิจิทัล', 'อบรมการใช้ AI', 'งานแสดงสินค้า', 'กิจกรรม CSR'];
+
+                activities.forEach(activity => {
+                    const option = document.createElement('option');
+                    option.value = activity;
+                    option.textContent = activity;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading activities:', error);
+                // Use default activities
+                const activities = ['สัมมนาออนไลน์', 'Workshop การตลาดดิจิทัล', 'อบรมการใช้ AI', 'งานแสดงสินค้า', 'กิจกรรม CSR'];
+                const select = document.getElementById('activity');
+                activities.forEach(activity => {
+                    const option = document.createElement('option');
+                    option.value = activity;
+                    option.textContent = activity;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        // Show Form
+        function showForm() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('formContainer').style.display = 'block';
+        }
+
+        // Validate Phone
+        function validatePhone(phone) {
+            const cleaned = phone.replace(/[-\s]/g, '');
+            return /^[0-9]{9,10}$/.test(cleaned);
+        }
+
+        // Show Status
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.className = `flex items-start gap-3 p-4 rounded-lg animate-fadeIn ${
+                type === 'success' 
+                    ? 'bg-green-50 text-green-800 border-2 border-green-200' 
+                    : 'bg-red-50 text-red-800 border-2 border-red-200'
+            }`;
+            
+            const icon = type === 'success' 
+                ? '<svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                : '<svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            
+            statusDiv.innerHTML = icon + '<p class="text-sm">' + message + '</p>';
+            statusDiv.classList.remove('hidden');
+        }
+
+        // Show Error
+        function showError(message) {
+            showStatus('error', message);
+        }
+
+        // Submit Form
+        async function submitForm() {
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const activity = document.getElementById('activity').value;
+
+            // Validation
+            if (!name) {
+                showError('กรุณากรอกชื่อ-นามสกุล');
                 return;
             }
 
-            addDebugLog('✅ ล็อกอินแล้ว - กำลังดึงข้อมูลโปรไฟล์...');
+            if (!phone) {
+                showError('กรุณากรอกเบอร์โทรศัพท์');
+                return;
+            }
 
-            userProfile = await liff.getProfile();
-            
-            document.getElementById('lineUserId').value = userProfile.userId;
-            statusEl.innerText = `✓ เชื่อมต่อ LINE แล้ว (${userProfile.displayName})`;
-            statusEl.classList.add('connected');
-            notifyBadge.classList.remove('hidden');
-            liffInitialized = true;
+            if (!validatePhone(phone)) {
+                showError('รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง');
+                return;
+            }
 
-            addDebugLog(`✅ ดึงข้อมูลสำเร็จ - User: ${userProfile.displayName}`);
-            addDebugLog(`📝 User ID: ${userProfile.userId}`);
+            if (!activity) {
+                showError('กรุณาเลือกกิจกรรม');
+                return;
+            }
 
-        } catch (err) {
-            addDebugLog(`❌ เกิดข้อผิดพลาด: ${err.message}`);
-            statusEl.innerText = '⚠ ไม่สามารถเชื่อมต่อ LINE';
-            statusEl.classList.add('error');
-            console.error('LIFF Error:', err);
-            
-            // ถ้าไม่ได้เปิดผ่าน LIFF ให้ใช้โหมดทดสอบ
-            if (err.message.includes('LIFF ID')) {
-                addDebugLog('💡 ตรวจพบ: เปิดไม่ผ่าน LIFF - ใช้โหมดทดสอบ');
-                document.getElementById('lineUserId').value = 'TEST_USER';
-                statusEl.innerText = '⚠ โหมดทดสอบ (ไม่ส่ง LINE)';
+            // Show loading
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div><span>กำลังบันทึก...</span>';
+
+            try {
+                const data = {
+                    action: 'saveData',
+                    data: {
+                        name: name,
+                        phone: phone,
+                        activity: activity,
+                        lineUserId: lineUserId,
+                        timestamp: new Date().toISOString()
+                    }
+                };
+
+                await fetch(CONFIG.SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                showStatus('success', '✅ บันทึกข้อมูลเรียบร้อย! ' + (isLineApp ? 'ระบบกำลังส่งข้อความยืนยันไปที่ LINE ของคุณ' : 'ข้อมูลถูกบันทึกลงระบบแล้ว'));
+
+                // Reset form
+                setTimeout(() => {
+                    document.getElementById('name').value = '';
+                    document.getElementById('phone').value = '';
+                    document.getElementById('activity').value = '';
+                    document.getElementById('statusMessage').classList.add('hidden');
+                }, 3000);
+
+            } catch (error) {
+                console.error('Submit error:', error);
+                showError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>ส่งข้อมูลลงทะเบียน';
             }
         }
-    }
 
-    // เริ่มต้น LIFF เมื่อหน้าโหลดเสร็จ
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initLiff);
-    } else {
-        initLiff();
-    }
+        // Event Listeners
+        document.getElementById('submitBtn').addEventListener('click', submitForm);
 
-    function updateSub(val) {
-        const sub = document.getElementById('sub-opt');
-        sub.innerHTML = '<option value="" disabled selected>เลือกรายการย่อย...</option>';
-        if (subData[val]) {
-            sub.disabled = false;
-            subData[val].forEach(i => sub.add(new Option(i, i)));
-        }
-    }
-
-    function handleForm(form) {
-        const formData = {
-            name: form.name.value,
-            phone: form.phone.value,
-            option: form.option.value,
-            sub_option: form.sub_option.value,
-            details: form.details.value || '',
-            lineUserId: form.lineUserId.value
-        };
-
-        addDebugLog(`📤 กำลังส่งข้อมูล: ${formData.name}, ${formData.phone}`);
-
-        document.getElementById('view-name').innerText = formData.name;
-        document.getElementById('view-phone').innerText = formData.phone;
-        document.getElementById('view-activity').innerText = formData.option;
-        document.getElementById('view-sub').innerText = formData.sub_option;
-
-        document.getElementById('section-form').classList.add('hidden');
-        document.getElementById('section-loading').classList.remove('hidden');
-        document.getElementById('submitBtn').disabled = true;
-
-        google.script.run
-            .withSuccessHandler(function(response) {
-                addDebugLog('✅ บันทึกข้อมูลสำเร็จ');
-                console.log('Success:', response);
-                document.getElementById('section-loading').classList.add('hidden');
-                document.getElementById('section-success').classList.remove('hidden');
-            })
-            .withFailureHandler(function(error) {
-                addDebugLog(`❌ เกิดข้อผิดพลาด: ${error.message}`);
-                console.error('Error:', error);
-                alert("เกิดข้อผิดพลาด: " + error.message);
-                document.getElementById('section-loading').classList.add('hidden');
-                document.getElementById('section-form').classList.remove('hidden');
-                document.getElementById('submitBtn').disabled = false;
-            })
-            .processForm(formData);
-    }
-
-    function backToForm() {
-        document.getElementById('mainForm').reset();
-        document.getElementById('sub-opt').disabled = true;
-        document.getElementById('sub-opt').innerHTML = '<option value="">กรุณาเลือกกิจกรรมก่อน</option>';
-        document.getElementById('section-success').classList.add('hidden');
-        document.getElementById('section-form').classList.remove('hidden');
-        document.getElementById('submitBtn').disabled = false;
-        document.getElementById('debugInfo').innerHTML = '';
-    }
-</script>
+        // Initialize on load
+        window.addEventListener('load', initialize);
+    </script>
 </body>
 </html>
