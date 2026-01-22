@@ -90,6 +90,17 @@
                         </select>
                     </div>
 
+                    <!-- Activity Details (แสดงเมื่อเลือกกิจกรรม) -->
+                    <div id="activityDetails" class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4" style="display: none;">
+                        <h3 class="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            รายละเอียดกิจกรรม
+                        </h3>
+                        <div id="activityInfo" class="text-sm text-gray-700 space-y-1"></div>
+                    </div>
+
                     <!-- User ID Display -->
                     <div id="userIdDisplay" class="bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-lg border border-blue-200" style="display: none;">
                         <p class="text-xs text-gray-600">
@@ -110,6 +121,87 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                         </svg>
                         ส่งข้อมูลลงทะเบียน
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success Summary -->
+            <div id="summaryContainer" style="display: none;">
+                <div class="bg-green-50 border-2 border-green-300 rounded-2xl p-6 animate-fadeIn">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-green-500 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-green-800 mb-1">ลงทะเบียนสำเร็จ!</h2>
+                        <p class="text-green-600 text-sm">ข้อมูลของคุณถูกบันทึกเรียบร้อยแล้ว</p>
+                    </div>
+
+                    <div class="bg-white rounded-lg p-4 mb-4 space-y-3">
+                        <h3 class="font-semibold text-gray-800 border-b pb-2">สรุปข้อมูลที่บันทึก</h3>
+                        
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gray-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            <div>
+                                <p class="text-xs text-gray-500">ชื่อ-นามสกุล</p>
+                                <p id="summaryName" class="font-medium text-gray-800"></p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gray-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                            <div>
+                                <p class="text-xs text-gray-500">เบอร์โทรศัพท์</p>
+                                <p id="summaryPhone" class="font-medium text-gray-800"></p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gray-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <div>
+                                <p class="text-xs text-gray-500">กิจกรรม</p>
+                                <p id="summaryActivity" class="font-medium text-gray-800"></p>
+                            </div>
+                        </div>
+
+                        <div id="summaryActivityDetails" class="bg-blue-50 p-3 rounded-lg mt-3" style="display: none;">
+                            <p class="text-xs text-gray-600 mb-1">รายละเอียดกิจกรรม:</p>
+                            <div id="summaryActivityInfo" class="text-sm text-gray-700"></div>
+                        </div>
+
+                        <div class="flex items-start gap-3 pt-2 border-t">
+                            <svg class="w-5 h-5 text-gray-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <div>
+                                <p class="text-xs text-gray-500">เวลาที่ลงทะเบียน</p>
+                                <p id="summaryTime" class="font-medium text-gray-800"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="lineMessageStatus" class="bg-blue-50 p-3 rounded-lg mb-4 flex items-start gap-2" style="display: none;">
+                        <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                        </svg>
+                        <p class="text-sm text-blue-800">ระบบได้ส่งข้อความยืนยันไปที่ LINE ของคุณแล้ว</p>
+                    </div>
+
+                    <button 
+                        id="addNewBtn"
+                        class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        ลงทะเบียนคนใหม่
                     </button>
                 </div>
             </div>
@@ -140,6 +232,8 @@
 
         let lineUserId = '';
         let isLineApp = false;
+        let activitiesData = [];
+        let submittedData = null;
 
         // Initialize
         async function initialize() {
@@ -184,34 +278,83 @@
             }
         }
 
-        // Load Activities
+        // Load Activities with Details
         async function loadActivities() {
             try {
                 const response = await fetch(CONFIG.SCRIPT_URL + '?action=getActivities');
                 const data = await response.json();
                 
                 const select = document.getElementById('activity');
-                const activities = data.activities && data.activities.length > 0 
-                    ? data.activities 
-                    : ['สัมมนาออนไลน์', 'Workshop การตลาดดิจิทัล', 'อบรมการใช้ AI', 'งานแสดงสินค้า', 'กิจกรรม CSR'];
+                
+                if (data.activities && data.activities.length > 0) {
+                    activitiesData = data.activities;
+                } else {
+                    // ข้อมูลตัวอย่างแบบมีรายละเอียด
+                    activitiesData = [
+                        {
+                            name: 'สัมมนาออนไลน์',
+                            date: '15 ก.พ. 2026',
+                            time: '13:00-16:00 น.',
+                            location: 'Zoom Meeting'
+                        },
+                        {
+                            name: 'Workshop การตลาดดิจิทัล',
+                            date: '20 ก.พ. 2026',
+                            time: '09:00-17:00 น.',
+                            location: 'ห้องประชุม A ชั้น 3'
+                        },
+                        {
+                            name: 'อบรมการใช้ AI',
+                            date: '25 ก.พ. 2026',
+                            time: '10:00-15:00 น.',
+                            location: 'ศูนย์ฝึกอบรม'
+                        }
+                    ];
+                }
 
-                activities.forEach(activity => {
+                activitiesData.forEach((activity, index) => {
                     const option = document.createElement('option');
-                    option.value = activity;
-                    option.textContent = activity;
+                    const activityName = typeof activity === 'string' ? activity : activity.name;
+                    option.value = index;
+                    option.textContent = activityName;
                     select.appendChild(option);
                 });
             } catch (error) {
                 console.error('Error loading activities:', error);
-                // Use default activities
-                const activities = ['สัมมนาออนไลน์', 'Workshop การตลาดดิจิทัล', 'อบรมการใช้ AI', 'งานแสดงสินค้า', 'กิจกรรม CSR'];
+                activitiesData = [
+                    {
+                        name: 'สัมมนาออนไลน์',
+                        date: '15 ก.พ. 2026',
+                        time: '13:00-16:00 น.',
+                        location: 'Zoom Meeting'
+                    }
+                ];
                 const select = document.getElementById('activity');
-                activities.forEach(activity => {
+                activitiesData.forEach((activity, index) => {
                     const option = document.createElement('option');
-                    option.value = activity;
-                    option.textContent = activity;
+                    option.value = index;
+                    option.textContent = activity.name;
                     select.appendChild(option);
                 });
+            }
+        }
+
+        // Show Activity Details
+        function showActivityDetails(index) {
+            const activity = activitiesData[index];
+            const detailsDiv = document.getElementById('activityDetails');
+            const infoDiv = document.getElementById('activityInfo');
+            
+            if (activity && typeof activity === 'object') {
+                let html = '';
+                if (activity.date) html += `<p>📅 วันที่: <strong>${activity.date}</strong></p>`;
+                if (activity.time) html += `<p>🕐 เวลา: <strong>${activity.time}</strong></p>`;
+                if (activity.location) html += `<p>📍 สถานที่: <strong>${activity.location}</strong></p>`;
+                
+                infoDiv.innerHTML = html;
+                detailsDiv.style.display = 'block';
+            } else {
+                detailsDiv.style.display = 'none';
             }
         }
 
@@ -219,6 +362,44 @@
         function showForm() {
             document.getElementById('loadingState').style.display = 'none';
             document.getElementById('formContainer').style.display = 'block';
+            document.getElementById('summaryContainer').style.display = 'none';
+        }
+
+        // Show Summary
+        function showSummary(data) {
+            const activity = activitiesData[data.activityIndex];
+            const activityName = typeof activity === 'string' ? activity : activity.name;
+            
+            document.getElementById('summaryName').textContent = data.name;
+            document.getElementById('summaryPhone').textContent = data.phone;
+            document.getElementById('summaryActivity').textContent = activityName;
+            
+            const now = new Date();
+            document.getElementById('summaryTime').textContent = now.toLocaleString('th-TH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            // Show activity details in summary
+            if (activity && typeof activity === 'object') {
+                let html = '';
+                if (activity.date) html += `<p class="text-sm">📅 ${activity.date}</p>`;
+                if (activity.time) html += `<p class="text-sm">🕐 ${activity.time}</p>`;
+                if (activity.location) html += `<p class="text-sm">📍 ${activity.location}</p>`;
+                
+                document.getElementById('summaryActivityInfo').innerHTML = html;
+                document.getElementById('summaryActivityDetails').style.display = 'block';
+            }
+
+            if (isLineApp) {
+                document.getElementById('lineMessageStatus').style.display = 'flex';
+            }
+
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('summaryContainer').style.display = 'block';
         }
 
         // Validate Phone
@@ -253,7 +434,7 @@
         async function submitForm() {
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
-            const activity = document.getElementById('activity').value;
+            const activityIndex = document.getElementById('activity').value;
 
             // Validation
             if (!name) {
@@ -271,7 +452,7 @@
                 return;
             }
 
-            if (!activity) {
+            if (!activityIndex) {
                 showError('กรุณาเลือกกิจกรรม');
                 return;
             }
@@ -282,12 +463,16 @@
             btn.innerHTML = '<div class="spinner"></div><span>กำลังบันทึก...</span>';
 
             try {
+                const activity = activitiesData[activityIndex];
+                const activityName = typeof activity === 'string' ? activity : activity.name;
+
                 const data = {
                     action: 'saveData',
                     data: {
                         name: name,
                         phone: phone,
-                        activity: activity,
+                        activity: activityName,
+                        activityDetails: typeof activity === 'object' ? activity : null,
                         lineUserId: lineUserId,
                         timestamp: new Date().toISOString()
                     }
@@ -302,27 +487,50 @@
                     body: JSON.stringify(data)
                 });
 
-                showStatus('success', '✅ บันทึกข้อมูลเรียบร้อย! ' + (isLineApp ? 'ระบบกำลังส่งข้อความยืนยันไปที่ LINE ของคุณ' : 'ข้อมูลถูกบันทึกลงระบบแล้ว'));
+                submittedData = {
+                    name: name,
+                    phone: phone,
+                    activityIndex: activityIndex
+                };
 
-                // Reset form
-                setTimeout(() => {
-                    document.getElementById('name').value = '';
-                    document.getElementById('phone').value = '';
-                    document.getElementById('activity').value = '';
-                    document.getElementById('statusMessage').classList.add('hidden');
-                }, 3000);
+                showSummary(submittedData);
 
             } catch (error) {
                 console.error('Submit error:', error);
                 showError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
-            } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>ส่งข้อมูลลงทะเบียน';
             }
         }
 
+        // Add New Registration
+        function addNewRegistration() {
+            // Reset form
+            document.getElementById('name').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('activity').value = '';
+            document.getElementById('activityDetails').style.display = 'none';
+            document.getElementById('statusMessage').classList.add('hidden');
+            
+            // Reset button
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = false;
+            btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>ส่งข้อมูลลงทะเบียน';
+            
+            showForm();
+        }
+
         // Event Listeners
         document.getElementById('submitBtn').addEventListener('click', submitForm);
+        document.getElementById('addNewBtn').addEventListener('click', addNewRegistration);
+        document.getElementById('activity').addEventListener('change', (e) => {
+            const index = e.target.value;
+            if (index) {
+                showActivityDetails(index);
+            } else {
+                document.getElementById('activityDetails').style.display = 'none';
+            }
+        });
 
         // Initialize on load
         window.addEventListener('load', initialize);
