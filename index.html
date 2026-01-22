@@ -56,6 +56,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 8px;
         }
 
@@ -99,11 +100,11 @@
             animation: fadeIn 0.5s ease-out backwards;
         }
 
-        .mb-3:nth-child(1) { animation-delay: 0.1s; }
-        .mb-3:nth-child(2) { animation-delay: 0.2s; }
-        .mb-3:nth-child(3) { animation-delay: 0.3s; }
-        .mb-3:nth-child(4) { animation-delay: 0.4s; }
-        .mb-3:nth-child(5) { animation-delay: 0.5s; }
+        .mb-3:nth-child(2) { animation-delay: 0.1s; }
+        .mb-3:nth-child(3) { animation-delay: 0.2s; }
+        .mb-3:nth-child(4) { animation-delay: 0.3s; }
+        .mb-3:nth-child(5) { animation-delay: 0.4s; }
+        .mb-3:nth-child(6) { animation-delay: 0.5s; }
 
         @keyframes fadeIn {
             from {
@@ -221,6 +222,7 @@
 
         .success-icon span {
             font-size: 40px;
+            color: white;
         }
 
         .success-title {
@@ -285,7 +287,7 @@
             background: #06c755;
             color: white;
             font-size: 12px;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 6px;
             display: inline-flex;
             align-items: center;
@@ -294,6 +296,10 @@
         }
 
         @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+            
             .card-main {
                 padding: 25px 20px;
             }
@@ -432,7 +438,6 @@
             statusEl.innerText = '⚠ ไม่สามารถเชื่อมต่อ LINE (จะใช้โหมดทดสอบ)';
             statusEl.classList.add('error');
             console.error('LIFF Error:', err);
-            // ตั้งค่า default สำหรับการทดสอบ
             document.getElementById('lineUserId').value = 'TEST_USER';
         }
     }
@@ -449,7 +454,6 @@
     }
 
     function handleForm(form) {
-        // เก็บข้อมูลสำหรับแสดงผล
         const formData = {
             name: form.name.value,
             phone: form.phone.value,
@@ -459,33 +463,26 @@
             lineUserId: form.lineUserId.value
         };
 
-        // แสดงข้อมูลในหน้าสรุป
         document.getElementById('view-name').innerText = formData.name;
         document.getElementById('view-phone').innerText = formData.phone;
         document.getElementById('view-activity').innerText = formData.option;
         document.getElementById('view-sub').innerText = formData.sub_option;
 
-        // แสดงหน้า Loading
         document.getElementById('section-form').classList.add('hidden');
         document.getElementById('section-loading').classList.remove('hidden');
-
-        // ปิดปุ่ม submit
         document.getElementById('submitBtn').disabled = true;
 
         console.log('Sending data:', formData);
 
-        // ส่งข้อมูลไปยัง Google Apps Script
         google.script.run
             .withSuccessHandler(function(response) {
                 console.log('Success:', response);
-                // แสดงหน้า Success
                 document.getElementById('section-loading').classList.add('hidden');
                 document.getElementById('section-success').classList.remove('hidden');
             })
             .withFailureHandler(function(error) {
                 console.error('Error:', error);
                 alert("เกิดข้อผิดพลาด: " + error.message);
-                // กลับไปหน้าฟอร์ม
                 document.getElementById('section-loading').classList.add('hidden');
                 document.getElementById('section-form').classList.remove('hidden');
                 document.getElementById('submitBtn').disabled = false;
