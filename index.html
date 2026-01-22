@@ -90,6 +90,19 @@
                         </select>
                     </div>
 
+                    <!-- Departure Time (แสดงเมื่อเลือกกิจกรรม) -->
+                    <div id="departureTimeContainer" style="display: none;">
+                        <label class="block text-gray-700 font-medium mb-2">
+                            เวลาออกเดินทาง <span class="text-red-500">*</span>
+                        </label>
+                        <select 
+                            id="departureTime" 
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition bg-white"
+                        >
+                            <option value="">-- เลือกเวลาออกเดินทาง --</option>
+                        </select>
+                    </div>
+
                     <!-- Activity Details (แสดงเมื่อเลือกกิจกรรม) -->
                     <div id="activityDetails" class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4" style="display: none;">
                         <h3 class="font-semibold text-blue-900 mb-2 flex items-center gap-2">
@@ -233,6 +246,7 @@
         let lineUserId = '';
         let isLineApp = false;
         let activitiesData = [];
+        let uniqueActivities = [];
         let submittedData = null;
 
         // Initialize
@@ -284,27 +298,42 @@
                 const response = await fetch(CONFIG.SCRIPT_URL + '?action=getActivities');
                 const data = await response.json();
                 
-                const select = document.getElementById('activity');
-                
                 if (data.activities && data.activities.length > 0) {
                     activitiesData = data.activities;
                 } else {
                     // ข้อมูลตัวอย่างแบบมีรายละเอียด
                     activitiesData = [
                         {
-                            name: 'สัมมนาออนไลน์',
+                            activity: 'สัมมนาออนไลน์',
+                            departureTime: '12:00 น.',
                             date: '15 ก.พ. 2026',
                             time: '13:00-16:00 น.',
                             location: 'Zoom Meeting'
                         },
                         {
-                            name: 'Workshop การตลาดดิจิทัล',
+                            activity: 'สัมมนาออนไลน์',
+                            departureTime: '12:30 น.',
+                            date: '15 ก.พ. 2026',
+                            time: '13:00-16:00 น.',
+                            location: 'Zoom Meeting'
+                        },
+                        {
+                            activity: 'Workshop การตลาดดิจิทัล',
+                            departureTime: '08:00 น.',
                             date: '20 ก.พ. 2026',
                             time: '09:00-17:00 น.',
                             location: 'ห้องประชุม A ชั้น 3'
                         },
                         {
-                            name: 'อบรมการใช้ AI',
+                            activity: 'Workshop การตลาดดิจิทัล',
+                            departureTime: '08:30 น.',
+                            date: '20 ก.พ. 2026',
+                            time: '09:00-17:00 น.',
+                            location: 'ห้องประชุม A ชั้น 3'
+                        },
+                        {
+                            activity: 'อบรมการใช้ AI',
+                            departureTime: '09:00 น.',
                             date: '25 ก.พ. 2026',
                             time: '10:00-15:00 น.',
                             location: 'ศูนย์ฝึกอบรม'
@@ -312,10 +341,14 @@
                     ];
                 }
 
-                activitiesData.forEach((activity, index) => {
+                // สร้างรายการกิจกรรมที่ไม่ซ้ำ
+                const activityNames = [...new Set(activitiesData.map(item => item.activity))];
+                uniqueActivities = activityNames;
+
+                const select = document.getElementById('activity');
+                uniqueActivities.forEach(activityName => {
                     const option = document.createElement('option');
-                    const activityName = typeof activity === 'string' ? activity : activity.name;
-                    option.value = index;
+                    option.value = activityName;
                     option.textContent = activityName;
                     select.appendChild(option);
                 });
@@ -323,32 +356,54 @@
                 console.error('Error loading activities:', error);
                 activitiesData = [
                     {
-                        name: 'สัมมนาออนไลน์',
+                        activity: 'สัมมนาออนไลน์',
+                        departureTime: '12:00 น.',
                         date: '15 ก.พ. 2026',
                         time: '13:00-16:00 น.',
                         location: 'Zoom Meeting'
                     }
                 ];
+                uniqueActivities = ['สัมมนาออนไลน์'];
                 const select = document.getElementById('activity');
-                activitiesData.forEach((activity, index) => {
+                uniqueActivities.forEach(activityName => {
                     const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = activity.name;
+                    option.value = activityName;
+                    option.textContent = activityName;
                     select.appendChild(option);
                 });
             }
         }
 
+        // Load Departure Times based on Activity
+        function loadDepartureTimes(activityName) {
+            const departureSelect = document.getElementById('departureTime');
+            departureSelect.innerHTML = '<option value="">-- เลือกเวลาออกเดินทาง --</option>';
+
+            // กรองเฉพาะกิจกรรมที่เลือก
+            const filteredActivities = activitiesData.filter(item => item.activity === activityName);
+
+            filteredActivities.forEach((item, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.dataset.fullIndex = activitiesData.indexOf(item);
+                option.textContent = item.departureTime;
+                departureSelect.appendChild(option);
+            });
+
+            document.getElementById('departureTimeContainer').style.display = 'block';
+        }
+
         // Show Activity Details
-        function showActivityDetails(index) {
-            const activity = activitiesData[index];
+        function showActivityDetails(fullIndex) {
+            const activity = activitiesData[fullIndex];
             const detailsDiv = document.getElementById('activityDetails');
             const infoDiv = document.getElementById('activityInfo');
             
-            if (activity && typeof activity === 'object') {
+            if (activity) {
                 let html = '';
                 if (activity.date) html += `<p>📅 วันที่: <strong>${activity.date}</strong></p>`;
-                if (activity.time) html += `<p>🕐 เวลา: <strong>${activity.time}</strong></p>`;
+                if (activity.time) html += `<p>🕐 เวลากิจกรรม: <strong>${activity.time}</strong></p>`;
+                if (activity.departureTime) html += `<p>🚗 เวลาออกเดินทาง: <strong>${activity.departureTime}</strong></p>`;
                 if (activity.location) html += `<p>📍 สถานที่: <strong>${activity.location}</strong></p>`;
                 
                 infoDiv.innerHTML = html;
@@ -367,12 +422,11 @@
 
         // Show Summary
         function showSummary(data) {
-            const activity = activitiesData[data.activityIndex];
-            const activityName = typeof activity === 'string' ? activity : activity.name;
+            const activity = activitiesData[data.activityFullIndex];
             
             document.getElementById('summaryName').textContent = data.name;
             document.getElementById('summaryPhone').textContent = data.phone;
-            document.getElementById('summaryActivity').textContent = activityName;
+            document.getElementById('summaryActivity').textContent = activity.activity;
             
             const now = new Date();
             document.getElementById('summaryTime').textContent = now.toLocaleString('th-TH', {
@@ -384,10 +438,11 @@
             });
 
             // Show activity details in summary
-            if (activity && typeof activity === 'object') {
+            if (activity) {
                 let html = '';
                 if (activity.date) html += `<p class="text-sm">📅 ${activity.date}</p>`;
                 if (activity.time) html += `<p class="text-sm">🕐 ${activity.time}</p>`;
+                if (activity.departureTime) html += `<p class="text-sm">🚗 เวลาออกเดินทาง: ${activity.departureTime}</p>`;
                 if (activity.location) html += `<p class="text-sm">📍 ${activity.location}</p>`;
                 
                 document.getElementById('summaryActivityInfo').innerHTML = html;
@@ -434,7 +489,9 @@
         async function submitForm() {
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
-            const activityIndex = document.getElementById('activity').value;
+            const activityName = document.getElementById('activity').value;
+            const departureTimeSelect = document.getElementById('departureTime');
+            const departureTimeIndex = departureTimeSelect.value;
 
             // Validation
             if (!name) {
@@ -452,8 +509,13 @@
                 return;
             }
 
-            if (!activityIndex) {
+            if (!activityName) {
                 showError('กรุณาเลือกกิจกรรม');
+                return;
+            }
+
+            if (!departureTimeIndex) {
+                showError('กรุณาเลือกเวลาออกเดินทาง');
                 return;
             }
 
@@ -463,16 +525,18 @@
             btn.innerHTML = '<div class="spinner"></div><span>กำลังบันทึก...</span>';
 
             try {
-                const activity = activitiesData[activityIndex];
-                const activityName = typeof activity === 'string' ? activity : activity.name;
+                const selectedOption = departureTimeSelect.options[departureTimeSelect.selectedIndex];
+                const fullIndex = parseInt(selectedOption.dataset.fullIndex);
+                const activity = activitiesData[fullIndex];
 
                 const data = {
                     action: 'saveData',
                     data: {
                         name: name,
                         phone: phone,
-                        activity: activityName,
-                        activityDetails: typeof activity === 'object' ? activity : null,
+                        activity: activity.activity,
+                        departureTime: activity.departureTime,
+                        activityDetails: activity,
                         lineUserId: lineUserId,
                         timestamp: new Date().toISOString()
                     }
@@ -490,7 +554,7 @@
                 submittedData = {
                     name: name,
                     phone: phone,
-                    activityIndex: activityIndex
+                    activityFullIndex: fullIndex
                 };
 
                 showSummary(submittedData);
@@ -509,6 +573,8 @@
             document.getElementById('name').value = '';
             document.getElementById('phone').value = '';
             document.getElementById('activity').value = '';
+            document.getElementById('departureTime').value = '';
+            document.getElementById('departureTimeContainer').style.display = 'none';
             document.getElementById('activityDetails').style.display = 'none';
             document.getElementById('statusMessage').classList.add('hidden');
             
@@ -523,12 +589,24 @@
         // Event Listeners
         document.getElementById('submitBtn').addEventListener('click', submitForm);
         document.getElementById('addNewBtn').addEventListener('click', addNewRegistration);
+        
         document.getElementById('activity').addEventListener('change', (e) => {
-            const index = e.target.value;
-            if (index) {
-                showActivityDetails(index);
-            } else {
+            const activityName = e.target.value;
+            if (activityName) {
+                loadDepartureTimes(activityName);
+                document.getElementById('departureTime').value = '';
                 document.getElementById('activityDetails').style.display = 'none';
+            } else {
+                document.getElementById('departureTimeContainer').style.display = 'none';
+                document.getElementById('activityDetails').style.display = 'none';
+            }
+        });
+
+        document.getElementById('departureTime').addEventListener('change', (e) => {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            const fullIndex = parseInt(selectedOption.dataset.fullIndex);
+            if (!isNaN(fullIndex)) {
+                showActivityDetails(fullIndex);
             }
         });
 
