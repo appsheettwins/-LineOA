@@ -131,7 +131,7 @@
             margin-top: 10px;
         }
 
-        .btn-submit:hover {
+        .btn-submit:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 12px 28px rgba(102, 126, 234, 0.5);
         }
@@ -281,6 +281,18 @@
             cursor: not-allowed;
         }
 
+        .line-notify-badge {
+            background: #06c755;
+            color: white;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
         @media (max-width: 576px) {
             .card-main {
                 padding: 25px 20px;
@@ -348,10 +360,14 @@
             </div>
             
             <button type="submit" id="submitBtn" class="btn-submit">
-                บันทึกข้อมูล
+                💾 บันทึกข้อมูล
             </button>
+            
             <div class="text-center">
                 <div id="lineStatus">กำลังตรวจสอบการเชื่อมต่อ LINE...</div>
+                <div id="lineNotifyBadge" class="line-notify-badge hidden">
+                    ✉️ จะส่งการแจ้งเตือนไปยัง LINE
+                </div>
             </div>
         </form>
     </div>
@@ -359,6 +375,7 @@
     <div id="section-loading" class="hidden text-center py-5">
         <div class="loading-spinner"></div>
         <p class="loading-text">กำลังบันทึกข้อมูล...</p>
+        <p class="loading-text" style="font-size: 13px; margin-top: 10px;">📨 กำลังส่งแจ้งเตือนไปยัง LINE</p>
     </div>
 
     <div id="section-success" class="hidden">
@@ -367,6 +384,9 @@
                 <span>✓</span>
             </div>
             <h3 class="success-title">บันทึกสำเร็จ!</h3>
+            <p style="color: #6b7280; font-size: 14px; margin-bottom: 25px;">
+                📨 ส่งการแจ้งเตือนไปยัง LINE ของคุณแล้ว
+            </p>
         </div>
         <div class="summary-box">
             <p><strong>👤 ชื่อ:</strong> <span id="view-name"></span></p>
@@ -389,6 +409,8 @@
 
     async function initLiff() {
         const statusEl = document.getElementById('lineStatus');
+        const notifyBadge = document.getElementById('lineNotifyBadge');
+        
         try {
             await liff.init({ liffId: "2008933743-UuRrgT1t" });
 
@@ -401,6 +423,10 @@
             document.getElementById('lineUserId').value = profile.userId;
             statusEl.innerText = '✓ เชื่อมต่อ LINE แล้ว';
             statusEl.classList.add('connected');
+            notifyBadge.classList.remove('hidden');
+
+            console.log('LINE User ID:', profile.userId);
+            console.log('Display Name:', profile.displayName);
 
         } catch (err) {
             statusEl.innerText = '⚠ ไม่สามารถเชื่อมต่อ LINE (จะใช้โหมดทดสอบ)';
@@ -445,6 +471,8 @@
 
         // ปิดปุ่ม submit
         document.getElementById('submitBtn').disabled = true;
+
+        console.log('Sending data:', formData);
 
         // ส่งข้อมูลไปยัง Google Apps Script
         google.script.run
